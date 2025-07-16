@@ -15,3 +15,11 @@ class ActionOut(ActionBase):
 
     class Config:
         from_attributes = True  # nouvelle syntaxe Pydantic v2
+
+class ActionFullOut(ActionOut):
+    current_price: float | None = None
+    gain_eur: float | None = None
+    gain_percent: float | None = None
+
+    class Config:
+        from_attributes = True
