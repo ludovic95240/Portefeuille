@@ -1,11 +1,15 @@
-# app/services/yfinance_service.py
 import yfinance as yf
+import pandas as pd
 
-def get_current_price(ticker: str) -> float | None:
-    try:
-        data = yf.Ticker(ticker)
-        hist = data.history(period="1d")
-        return float(hist["Close"].iloc[-1])
-    except Exception as e:
-        print(f"Erreur YFinance pour {ticker} : {e}")
-        return None
+
+def fetch_history(ticker: str, period: str = "1y") -> pd.DataFrame:
+    """
+    Récupère l'historique du cours de clôture pour le ticker sur la période donnée.
+    """
+    data = yf.Ticker(ticker).history(period=period)
+    return data[["Close"]].rename(columns={"Close": "close"})
+
+
+def fetch_current_price(ticker: str) -> float:
+    """Récupère le cours de clôture le plus récent"""
+    return float(fetch_history(ticker, period="5d")["close"].iloc[-1])

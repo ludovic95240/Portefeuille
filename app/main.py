@@ -1,22 +1,11 @@
 from fastapi import FastAPI
-from app.api.endpoints import auth, portefeuille
-from app.db.session import engine
-from app.models import user, action
-from app.models import historique_prix
+from app.api.endpoints import quotes, kpis
 
+app = FastAPI(title="Portefeuille SaaS - Prototype")
 
+app.include_router(quotes.router, prefix="/quotes", tags=["Quotes"])
+app.include_router(kpis.router, prefix="/kpis", tags=["KPIs"])
 
-
-app = FastAPI()
-
-
-app.include_router(auth.router, prefix="/auth", tags=["Authentification"])
-app.include_router(portefeuille.router, prefix="/portefeuille", tags=["Portefeuille"])
-
-# Puis crée les tables
-user.Base.metadata.create_all(bind=engine)
-action.Base.metadata.create_all(bind=engine)
-historique_prix.Base.metadata.create_all(bind=engine)
 @app.get("/")
 def root():
-    return {"msg": "Hello depuis ta base API"}
+    return {"msg": "Portefeuille API opérationnel"}
